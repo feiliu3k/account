@@ -12,7 +12,7 @@ import (
 )
 
 func RegisterHandler(r *gin.Engine) {
-	r.GET("/hello", gohttp.GoHttpHandler)
+	r.GET("/hello", account.GoHttpHandler)
 }
 
 // AppVersion name
