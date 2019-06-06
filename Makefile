@@ -6,10 +6,10 @@ all: third vendor build test stat
 
 build: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor
 	@echo "compile"
-	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/gohttp/main.go && \
-	mkdir -p build/gohttp/bin && mv main build/gohttp/bin/gohttp && \
-	mkdir -p build/gohttp/configs && cp configs/gohttp/* build/gohttp/configs && \
-	mkdir -p build/gohttp/log
+	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/account/main.go && \
+	mkdir -p build/account/bin && mv main build/account/bin/account && \
+	mkdir -p build/account/configs && cp configs/account/* build/account/configs && \
+	mkdir -p build/account/log
 
 vendor: go.mod go.sum
 	@echo "install golang dependency"

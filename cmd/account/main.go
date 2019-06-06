@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/hatlonely/account/internal/gohttp"
+	"github.com/hatlonely/account/internal/account"
 	"github.com/hatlonely/account/internal/logger"
 	"github.com/spf13/viper"
 	"os"
@@ -47,9 +47,9 @@ func main() {
 		panic(err)
 	}
 	accessLog, err := logger.NewJsonLoggerWithViper(config.Sub("logger.accessLog"))
-	gohttp.InfoLog = infoLog
-	gohttp.WarnLog = warnLog
-	gohttp.AccessLog = accessLog
+	account.InfoLog = infoLog
+	account.WarnLog = warnLog
+	account.AccessLog = accessLog
 
 	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetString("service.port"))
 
