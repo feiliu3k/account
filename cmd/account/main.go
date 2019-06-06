@@ -12,6 +12,9 @@ import (
 )
 
 func RegisterHandler(r *gin.Engine) {
+	r.GET("/health", func(ctx *gin.Context) {
+		ctx.String(200, "ok")
+	})
 	r.GET("/hello", account.GoHttpHandler)
 }
 
@@ -20,7 +23,7 @@ var AppVersion = "unknown"
 
 func main() {
 	version := flag.Bool("v", false, "print current version")
-	configfile := flag.String("c", "configs/gohttp.json", "config file path")
+	configfile := flag.String("c", "configs/account.json", "config file path")
 	flag.Parse()
 	if *version {
 		fmt.Println(AppVersion)
