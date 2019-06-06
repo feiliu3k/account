@@ -13,6 +13,7 @@ var AccessLog *logrus.Logger
 func init() {
 	InfoLog = logrus.New()
 	WarnLog = logrus.New()
+	AccessLog = logrus.New()
 }
 
 func GoHttpHandler(c *gin.Context) {

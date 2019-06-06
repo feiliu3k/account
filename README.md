@@ -1,3 +1,5 @@
-# go-http-project-example
+# account-账户服务
 
-This is an example of go project for http services
+账户服务，提供用户的注册，登陆，授权，权限管理等功能
+
+## 
