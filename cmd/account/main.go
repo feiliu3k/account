@@ -7,16 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hatlonely/account/internal/account"
 	"github.com/hatlonely/account/internal/logger"
+	"github.com/hatlonely/account/internal/mysqldb"
 	"github.com/spf13/viper"
 	"os"
 )
-
-func RegisterHandler(r *gin.Engine) {
-	r.GET("/health", func(ctx *gin.Context) {
-		ctx.String(200, "ok")
-	})
-	r.GET("/hello", account.GoHttpHandler)
-}
 
 // AppVersion name
 var AppVersion = "unknown"
@@ -61,7 +55,16 @@ func main() {
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
 
-	RegisterHandler(r)
+	db, err := mysqldb.NewMysqlDB(config.GetString("mysqldb.uri"))
+	if err != nil {
+		panic(err)
+	}
+	service := account.NewService(db)
+
+	r.GET("/health", func(ctx *gin.Context) {
+		ctx.String(200, "ok")
+	})
+	r.GET("/login", service.Login)
 
 	if err := r.Run(config.GetString("service.port")); err != nil {
 		panic(err)

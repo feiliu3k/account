@@ -1,8 +1,11 @@
 package account
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/hatlonely/account/internal/mysqldb"
+	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,11 +19,43 @@ func init() {
 	AccessLog = logrus.New()
 }
 
-func GoHttpHandler(c *gin.Context) {
-	name := c.DefaultQuery("name", "world")
+type Service struct {
+	db *mysqldb.MysqlDB
+}
 
+func NewService(db *mysqldb.MysqlDB) *Service {
+	return &Service{
+		db: db,
+	}
+}
+
+func (s *Service) login(username string, password string) (bool, string, error) {
+	account, err := s.db.SelectAccountByUsernameOrTelephoneOrEmail(username)
+	if err != nil {
+		WarnLog.WithField("err", err).Warn("SelectAccountByUsernameOrTelephoneOrEmail failed")
+		return false, "", err
+	}
+
+	if account.Password != password {
+		return false, "", nil
+	}
+
+	token := uuid.NewV4()
+	buf := make([]byte, 32)
+	hex.Encode(buf, token.Bytes())
+
+	return true, string(buf), nil
+}
+
+func (s *Service) Login(c *gin.Context) {
+	username := c.DefaultQuery("username", "")
+	password := c.DefaultQuery("password", "")
+
+	ok, token, err := s.login(username, password)
 	res := gin.H{
-		"message": "hello " + name,
+		"valid": ok,
+		"err":   err,
+		"token": token,
 	}
 
 	AccessLog.WithFields(logrus.Fields{
