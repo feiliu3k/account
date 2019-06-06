@@ -52,7 +52,7 @@ func (m *MysqlDB) InsertAccount(account *Account) (bool, error) {
 	if account.Email != "" {
 		conditions = append(conditions, fmt.Sprintf("email='%v'", account.Email))
 	}
-	err := m.db.Where(strings.Join(conditions, " AND ")).First(accountDB).Error
+	err := m.db.Where(strings.Join(conditions, " OR ")).First(accountDB).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -62,6 +62,7 @@ func (m *MysqlDB) InsertAccount(account *Account) (bool, error) {
 			return false, fmt.Errorf("accountID [%v] is already exists", accountDB.ID)
 		}
 		if accountDB.Username == account.Username {
+
 			return false, fmt.Errorf("username [%v] is already exists", accountDB.Username)
 		}
 		if accountDB.Telephone == account.Telephone {

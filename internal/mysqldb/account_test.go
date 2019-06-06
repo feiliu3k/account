@@ -86,6 +86,50 @@ func TestMysqlDB_InsertAccount(t *testing.T) {
 			So(account.Telephone, ShouldEqual, "+8612345678901")
 			So(account.Password, ShouldEqual, "e010597fcf126d58fdfa36e636f8fc9e")
 		})
+
+		Convey("insert account dup usename or email or telephone", func() {
+			ok, err := m.InsertAccount(&Account{
+				Username:  "hatlonely",
+				Email:     "hatlonely@foxmail.com",
+				Telephone: "+8612345678901",
+				Password:  "e010597fcf126d58fdfa36e636f8fc9e",
+			})
+			So(err, ShouldBeNil)
+			So(ok, ShouldBeTrue)
+
+			Convey("insert account dup username", func() {
+				ok, err = m.InsertAccount(&Account{
+					Username:  "hatlonely",
+					Email:     "hatlonely1@foxmail.com",
+					Telephone: "+8612345678902",
+					Password:  "e010597fcf126d58fdfa36e636f8fc9e",
+				})
+				So(err, ShouldNotBeNil)
+				So(ok, ShouldBeFalse)
+			})
+
+			Convey("insert account dup telephone", func() {
+				ok, err = m.InsertAccount(&Account{
+					Username:  "hatlonely1",
+					Email:     "hatlonely1@foxmail.com",
+					Telephone: "+8612345678901",
+					Password:  "e010597fcf126d58fdfa36e636f8fc9e",
+				})
+				So(err, ShouldNotBeNil)
+				So(ok, ShouldBeFalse)
+			})
+
+			Convey("insert account dup email", func() {
+				ok, err = m.InsertAccount(&Account{
+					Username:  "hatlonely1",
+					Email:     "hatlonely@foxmail.com",
+					Telephone: "+8612345678902",
+					Password:  "e010597fcf126d58fdfa36e636f8fc9e",
+				})
+				So(err, ShouldNotBeNil)
+				So(ok, ShouldBeFalse)
+			})
+		})
 	})
 }
 
