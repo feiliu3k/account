@@ -3,8 +3,12 @@ module github.com/hatlonely/account
 go 1.12
 
 replace (
+	cloud.google.com/go => github.com/googleapis/google-cloud-go v0.0.0-20190603211518-c8433c9aaceb
+	golang.org/x/crypto => github.com/golang/crypto v0.0.0-20190605123033-f99c8df09eb5
 	golang.org/x/sys => github.com/golang/sys v0.0.0-20190602015325-4c4f7f33c9ed
 	golang.org/x/text => github.com/golang/text v0.3.2
+	google.golang.org/genproto => github.com/google/go-genproto v0.0.0-20190605220351-eb0b1bdb6ae6
+// google.golang.org/api => github.com/googleapis/google-api-go-client master
 )
 
 require (
