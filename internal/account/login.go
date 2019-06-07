@@ -13,8 +13,8 @@ type LoginReqBody struct {
 }
 
 type LoginResBody struct {
-	Valid bool   `json:"valid,omitempty"`
-	Token string `json:"token,omitempty"`
+	Valid bool   `json:"valid"`
+	Token string `json:"token"`
 }
 
 func (s *Service) Login(c *gin.Context) {
@@ -69,6 +69,10 @@ func (s *Service) login(req *LoginReqBody) (*LoginResBody, error) {
 	account, err := s.db.SelectAccountByUsernameOrTelephoneOrEmail(req.Username)
 	if err != nil {
 		return nil, err
+	}
+
+	if account == nil {
+		return &LoginResBody{Valid: false}, nil
 	}
 
 	if account.Password != req.Password {
