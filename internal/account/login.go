@@ -1,46 +1,68 @@
 package account
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type LoginReqBody struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 type LoginResBody struct {
-	Valid bool   `json:"valid"`
-	Token string `json:"token"`
+	Valid bool   `json:"valid,omitempty"`
+	Token string `json:"token,omitempty"`
 }
 
 func (s *Service) Login(c *gin.Context) {
+	rid := c.DefaultQuery("rid", NewToken())
 	req := &LoginReqBody{}
-	if err := json.NewDecoder(c.Request.Body).Decode(req); err != nil {
-		WarnLog.WithField("err", err).Warn("decode request body failed")
-		c.String(http.StatusBadRequest, "")
-		return
-	}
-	res, err := s.login(req)
+	var res *LoginResBody
+	var err error
+	var buf []byte
+	status := http.StatusOK
+
+	defer func() {
+		AccessLog.WithFields(logrus.Fields{
+			"host":   c.Request.Host,
+			"body":   string(buf),
+			"url":    c.Request.URL.String(),
+			"req":    req,
+			"res":    res,
+			"rid":    rid,
+			"err":    err,
+			"status": status,
+		}).Info()
+	}()
+
+	buf, err = c.GetRawData()
 	if err != nil {
-		WarnLog.WithField("err", err).Warn("login failed")
-		c.String(http.StatusInternalServerError, err.Error())
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("get raw data failed")
+		status = http.StatusBadRequest
+		c.String(status, "")
 		return
 	}
 
-	AccessLog.WithFields(logrus.Fields{
-		"host": c.Request.Host,
-		"url":  c.Request.URL.String(),
-		"req":  req,
-		"res":  res,
-	}).Info()
+	if err = json.Unmarshal(buf, req); err != nil {
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("decode request body failed")
+		status = http.StatusBadRequest
+		c.String(status, "")
+		return
+	}
 
-	c.JSON(http.StatusOK, res)
+	res, err = s.login(req)
+	if err != nil {
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("login failed")
+		status = http.StatusInternalServerError
+		c.String(status, err.Error())
+		return
+	}
+
+	status = http.StatusOK
+	c.JSON(status, res)
 }
 
 func (s *Service) login(req *LoginReqBody) (*LoginResBody, error) {
@@ -53,11 +75,7 @@ func (s *Service) login(req *LoginReqBody) (*LoginResBody, error) {
 		return &LoginResBody{Valid: false}, nil
 	}
 
-	uid := uuid.NewV4()
-	buf := make([]byte, 32)
-	hex.Encode(buf, uid.Bytes())
-	token := string(buf)
-
+	token := NewToken()
 	if err := s.cache.SetAccount(token, account); err != nil {
 		return nil, err
 	}

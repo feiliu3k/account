@@ -48,7 +48,7 @@ func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		}
 		buf.WriteString(fmt.Sprintf("%v=%v,", k, v))
 	}
-	return []byte(fmt.Sprintf("[%v] [%v] [%v] [%v] %v\n", entry.Level, entry.Time.Format("2006-01-02 15:04:05"), entry.Data["@file"], buf.String(), entry.Message)), nil
+	return []byte(fmt.Sprintf("[%v] [%v] [%v] [%v] [%v] %v\n", entry.Level, entry.Time.Format("2006-01-02 15:04:05"), entry.Data["@file"], entry.Data["@rid"], buf.String(), entry.Message)), nil
 }
 
 func NewTextLogger(filename string, maxAge time.Duration) (*logrus.Logger, error) {
