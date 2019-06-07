@@ -18,7 +18,6 @@ url = "http://127.0.0.1:6060"
 
 def start():
     subprocess.Popen("cd build/account && nohup bin/account &",  shell=True)
-    # time.sleep(2)
 
     now = datetime.datetime.now()
     while datetime.datetime.now() - now < datetime.timedelta(seconds=5):
