@@ -2,16 +2,28 @@ package logger
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/lestrrat-go/file-rotatelogs"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"os"
 	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
 )
+
+var hostname string
+
+func init() {
+	var err error
+	hostname, err = os.Hostname()
+	if err != nil {
+		hostname = "unknown"
+	}
+}
 
 type CallerHook struct{}
 
@@ -36,9 +48,7 @@ func (hook *CallerHook) Fire(entry *logrus.Entry) error {
 	return nil
 }
 
-type TextFormatter struct {
-	logrus.TextFormatter
-}
+type TextFormatter struct{}
 
 func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	var buf bytes.Buffer
@@ -49,6 +59,18 @@ func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		buf.WriteString(fmt.Sprintf("%v=%v,", k, v))
 	}
 	return []byte(fmt.Sprintf("[%v] [%v] [%v] [%v] [%v] %v\n", entry.Level, entry.Time.Format("2006-01-02 15:04:05"), entry.Data["@file"], entry.Data["@rid"], buf.String(), entry.Message)), nil
+}
+
+type JSONFormatter struct{}
+
+func (f *JSONFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	entry.Data["@timestamp"] = time.Now().Format(time.RFC3339)
+	entry.Data["@hostname"] = hostname
+	buf, err := json.Marshal(entry.Data)
+	if err != nil {
+		return nil, err
+	}
+	return append(buf, '\n'), nil
 }
 
 func NewTextLogger(filename string, maxAge time.Duration) (*logrus.Logger, error) {
@@ -80,7 +102,7 @@ func NewTextLogger(filename string, maxAge time.Duration) (*logrus.Logger, error
 
 func NewJsonLogger(filename string, maxAge time.Duration) (*logrus.Logger, error) {
 	log := logrus.New()
-	log.Formatter = &logrus.JSONFormatter{}
+	log.Formatter = &JSONFormatter{}
 	if filename == "" || filename == "stdout" {
 		return log, nil
 	}
