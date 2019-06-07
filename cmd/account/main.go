@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hatlonely/account/internal/account"
@@ -10,7 +12,6 @@ import (
 	"github.com/hatlonely/account/internal/mysqldb"
 	"github.com/hatlonely/account/internal/rediscache"
 	"github.com/spf13/viper"
-	"os"
 )
 
 // AppVersion name
@@ -82,7 +83,7 @@ func main() {
 	r.Use(cors.Default())
 
 	// set handler
-	r.GET("/health", func(ctx *gin.Context) {
+	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
 	r.POST("/login", service.Login)

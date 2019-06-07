@@ -27,6 +27,10 @@ test: vendor
 	- cd internal && go test -cover ./...
 	- cd pkg && go test -cover ./...
 
+.PHONY: behave
+behave:
+	@behave features
+
 .PHONY: stat
 stat: cloc gocyclo
 	@echo "code statistics"
