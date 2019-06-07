@@ -54,3 +54,18 @@ def step_impl(context, status, valid):
             assert_that(len(context.res["token"]), equal_to(32))
         else:
             assert_that(context.res["token"], equal_to(""))
+
+
+@then('检查状态码应该为 "{status:int}"')
+def step_impl(context, status):
+    assert_that(context.status, equal_to(status))
+
+
+@then('检查有效性应该为 "{valid:bool}"')
+def step_impl(context, valid):
+    assert_that(context.res["valid"], equal_to(valid))
+
+
+@then('检查token长度应该为 "{tokenlen:int}"')
+def step_impl(context, tokenlen):
+    assert_that(len(context.res["token"]), equal_to(tokenlen))
