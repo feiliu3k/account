@@ -32,6 +32,25 @@ func NewService(db *mysqldb.MysqlDB, cache *rediscache.RedisCache) *Service {
 	}
 }
 
+func (s *Service) Login(c *gin.Context) {
+	username := c.DefaultQuery("username", "")
+	password := c.DefaultQuery("password", "")
+
+	ok, token, err := s.login(username, password)
+	res := gin.H{
+		"valid": ok,
+		"err":   err,
+		"token": token,
+	}
+
+	AccessLog.WithFields(logrus.Fields{
+		"request":  fmt.Sprintf("%v%v", c.Request.Host, c.Request.URL),
+		"response": res,
+	}).Info()
+
+	c.JSON(200, res)
+}
+
 func (s *Service) login(username string, password string) (bool, string, error) {
 	account, err := s.db.SelectAccountByUsernameOrTelephoneOrEmail(username)
 	if err != nil {
@@ -53,23 +72,4 @@ func (s *Service) login(username string, password string) (bool, string, error) 
 	}
 
 	return true, token, nil
-}
-
-func (s *Service) Login(c *gin.Context) {
-	username := c.DefaultQuery("username", "")
-	password := c.DefaultQuery("password", "")
-
-	ok, token, err := s.login(username, password)
-	res := gin.H{
-		"valid": ok,
-		"err":   err,
-		"token": token,
-	}
-
-	AccessLog.WithFields(logrus.Fields{
-		"request":  fmt.Sprintf("%v%v", c.Request.Host, c.Request.URL),
-		"response": res,
-	}).Info()
-
-	c.JSON(200, res)
 }
