@@ -5,6 +5,15 @@
     "mysqldb": {
         "uri": "hatlonely:keaiduo1@/hads?charset=utf8&parseTime=True&loc=Local"
     },
+    "rediscache":{
+        "address": "127.0.0.1:6379",
+        "timeout": "20ms",
+        "retries": 3,
+        "poolSize": 4,
+        "password": "",
+        "db": 0,
+        "expiration": "60s"
+    },
     "logger": {
         "infoLog": {
             "filename": "log/gohttp.info",

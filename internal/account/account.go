@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hatlonely/account/internal/mysqldb"
+	"github.com/hatlonely/account/internal/rediscache"
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -20,12 +21,15 @@ func init() {
 }
 
 type Service struct {
-	db *mysqldb.MysqlDB
+	db    *mysqldb.MysqlDB
+	cache *rediscache.RedisCache
 }
 
-func NewService(db *mysqldb.MysqlDB) *Service {
+func NewService(db *mysqldb.MysqlDB, cache *rediscache.RedisCache) *Service {
+	InfoLog.Infof("hello world")
 	return &Service{
-		db: db,
+		db:    db,
+		cache: cache,
 	}
 }
 

@@ -8,6 +8,7 @@ import (
 	"github.com/hatlonely/account/internal/account"
 	"github.com/hatlonely/account/internal/logger"
 	"github.com/hatlonely/account/internal/mysqldb"
+	"github.com/hatlonely/account/internal/rediscache"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -24,6 +25,7 @@ func main() {
 		os.Exit(0)
 	}
 
+	// load config
 	config := viper.New()
 	config.SetConfigType("json")
 	fp, err := os.Open(*configfile)
@@ -35,6 +37,7 @@ func main() {
 		panic(err)
 	}
 
+	// init logger
 	infoLog, err := logger.NewTextLoggerWithViper(config.Sub("logger.infoLog"))
 	if err != nil {
 		panic(err)
@@ -48,24 +51,42 @@ func main() {
 	account.WarnLog = warnLog
 	account.AccessLog = accessLog
 
-	infoLog.Infof("%v init success, port[%v]", os.Args[0], config.GetString("service.port"))
+	// init mysqldb
+	db, err := mysqldb.NewMysqlDB(config.GetString("mysqldb.uri"))
+	if err != nil {
+		panic(err)
+	}
+	infoLog.Infof("init mysqldb success. uri [%v]", config.GetString("mysqldb.uri"))
 
+	// init redis cache
+	option := &rediscache.RedisCacheOption{}
+	if err := config.Sub("rediscache").Unmarshal(option); err != nil {
+		panic(err)
+	}
+	cache, err := rediscache.NewRedisCache(option)
+	if err != nil {
+		panic(err)
+	}
+	infoLog.Infof("init redis cache success. option [%#v]", option)
+
+	// init services
+	service := account.NewService(db, cache)
+
+	// init gin
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
 
-	db, err := mysqldb.NewMysqlDB(config.GetString("mysqldb.uri"))
-	if err != nil {
-		panic(err)
-	}
-	service := account.NewService(db)
-
+	// set handler
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
 	r.GET("/login", service.Login)
 
+	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
+
+	// run server
 	if err := r.Run(config.GetString("service.port")); err != nil {
 		panic(err)
 	}
