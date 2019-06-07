@@ -43,11 +43,16 @@ func (s *Service) login(username string, password string) (bool, string, error) 
 		return false, "", nil
 	}
 
-	token := uuid.NewV4()
+	uid := uuid.NewV4()
 	buf := make([]byte, 32)
-	hex.Encode(buf, token.Bytes())
+	hex.Encode(buf, uid.Bytes())
+	token := string(buf)
 
-	return true, string(buf), nil
+	if err := s.cache.SetAccount(token, account); err != nil {
+		return false, "", err
+	}
+
+	return true, token, nil
 }
 
 func (s *Service) Login(c *gin.Context) {
