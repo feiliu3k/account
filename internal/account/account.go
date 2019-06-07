@@ -26,7 +26,6 @@ type Service struct {
 }
 
 func NewService(db *mysqldb.MysqlDB, cache *rediscache.RedisCache) *Service {
-	InfoLog.Infof("hello world")
 	return &Service{
 		db:    db,
 		cache: cache,

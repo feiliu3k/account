@@ -47,6 +47,9 @@ func main() {
 		panic(err)
 	}
 	accessLog, err := logger.NewJsonLoggerWithViper(config.Sub("logger.accessLog"))
+	if err != nil {
+		panic(err)
+	}
 	account.InfoLog = infoLog
 	account.WarnLog = warnLog
 	account.AccessLog = accessLog
@@ -59,7 +62,7 @@ func main() {
 	infoLog.Infof("init mysqldb success. uri [%v]", config.GetString("mysqldb.uri"))
 
 	// init redis cache
-	option := &rediscache.RedisCacheOption{}
+	option := &rediscache.Option{}
 	if err := config.Sub("rediscache").Unmarshal(option); err != nil {
 		panic(err)
 	}

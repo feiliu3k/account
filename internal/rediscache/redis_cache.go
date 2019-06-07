@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type RedisCacheOption struct {
+type Option struct {
 	Address    string
 	Timeout    time.Duration
 	Retries    int
@@ -19,11 +19,11 @@ type RedisCacheOption struct {
 
 type RedisCache struct {
 	client *redis.Client
-	option *RedisCacheOption
+	option *Option
 }
 
 //func NewRedisCache(addr string, timeout time.Duration, retries int, poolSize int, password string, db int) (*RedisCache, error) {
-func NewRedisCache(option *RedisCacheOption) (*RedisCache, error) {
+func NewRedisCache(option *Option) (*RedisCache, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:         option.Address,
 		DialTimeout:  option.Timeout,
