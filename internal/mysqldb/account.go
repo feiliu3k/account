@@ -7,12 +7,12 @@ import (
 )
 
 type Account struct {
-	ID        int    `gorm:"type:bigint(20) auto_increment;primary_key"`
-	Username  string `gorm:"type:varchar(64);not null;unique_index:username_idx"`
-	Telephone string `gorm:"type:varchar(64) default '';not null;index:telephone_idx"`
-	Email     string `gorm:"type:varchar(64) default '';not null;index:email_idx"`
-	Password  string `gorm:"type:varchar(32) default '';not null"`
-	Role      int    `gorm:"type:bigint(20) default 0;not null"`
+	ID        int    `gorm:"type:bigint(20) auto_increment;primary_key" json:"id"`
+	Username  string `gorm:"type:varchar(64);not null;unique_index:username_idx" json:"username"`
+	Telephone string `gorm:"type:varchar(64) default '';not null;index:telephone_idx" json:"telephone"`
+	Email     string `gorm:"type:varchar(64) default '';not null;index:email_idx" json:"email"`
+	Password  string `gorm:"type:varchar(32) default '';not null" json:"password"`
+	Role      int    `gorm:"type:bigint(20) default 0;not null" json:"role"`
 }
 
 func (m *MysqlDB) SelectAccountByUsernameOrTelephoneOrEmail(key string) (*Account, error) {
