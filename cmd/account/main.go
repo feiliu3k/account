@@ -85,7 +85,8 @@ func main() {
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
-	r.GET("/login", service.Login)
+	r.POST("/login", service.Login)
+	r.GET("/register", service.Register)
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 
