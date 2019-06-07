@@ -16,15 +16,15 @@
     },
     "logger": {
         "infoLog": {
-            "filename": "log/gohttp.info",
+            "filename": "log/account.info",
             "maxAge": "24h"
         },
         "warnLog": {
-            "filename": "log/gohttp.warn",
+            "filename": "log/account.warn",
             "maxAge": "24h"
         },
         "accessLog": {
-            "filename": "log/gohttp.access",
+            "filename": "log/account.access",
             "maxAge": "24h"
         }
     }
