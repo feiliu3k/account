@@ -17,7 +17,6 @@ type LoginReqBody struct {
 type LoginResBody struct {
 	Valid bool   `json:"valid"`
 	Token string `json:"token"`
-	Err   error  `json:"err"`
 }
 
 func (s *Service) Login(c *gin.Context) {

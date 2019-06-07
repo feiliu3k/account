@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/lestrrat-go/file-rotatelogs"
 	"github.com/sirupsen/logrus"
@@ -8,6 +9,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -18,9 +20,17 @@ func (hook *CallerHook) Levels() []logrus.Level {
 }
 
 func (hook *CallerHook) Fire(entry *logrus.Entry) error {
-	if pc, file, line, ok := runtime.Caller(8); ok {
+	for i := 5; i < 20; i++ {
+		pc, file, line, ok := runtime.Caller(i)
+		if !ok {
+			break
+		}
+		if strings.Contains(file, "logrus") {
+			continue
+		}
 		funcName := runtime.FuncForPC(pc).Name()
-		entry.Data["source"] = fmt.Sprintf("%s:%v:%s", path.Base(file), line, path.Base(funcName))
+		entry.Data["@file"] = fmt.Sprintf("%s:%v:%s", path.Base(file), line, path.Base(funcName))
+		break
 	}
 
 	return nil
@@ -31,7 +41,14 @@ type TextFormatter struct {
 }
 
 func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
-	return []byte(fmt.Sprintf("[%v] [%v] [%v] %v\n", entry.Level, entry.Time.Format("2006-01-02 15:04:05"), entry.Data["source"], entry.Message)), nil
+	var buf bytes.Buffer
+	for k, v := range entry.Data {
+		if k[0] == '@' {
+			continue
+		}
+		buf.WriteString(fmt.Sprintf("%v=%v,", k, v))
+	}
+	return []byte(fmt.Sprintf("[%v] [%v] [%v] [%v] %v\n", entry.Level, entry.Time.Format("2006-01-02 15:04:05"), entry.Data["@file"], buf.String(), entry.Message)), nil
 }
 
 func NewTextLogger(filename string, maxAge time.Duration) (*logrus.Logger, error) {
