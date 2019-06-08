@@ -33,7 +33,7 @@ def step_impl(context, username, telephone, email, password):
 
 @when('用户 "{username:str}" 使用密码 "{password:str}" 登陆')
 def step_impl(context, username, password):
-    res = requests.post("http://127.0.0.1:6060/login", json={
+    res = requests.post("{}/login".format(context.config["url"]), json={
         "username": username,
         "password": password,
     })
@@ -66,7 +66,6 @@ def step_impl(context, tokenlen):
 @then('检查redis中token')
 def step_impl(context):
     res = context.redis_client.get(context.res["token"])
-    print(res)
     account = json.loads(res)
     assert_that(context.username, equal_to(account["username"]))
     assert_that(context.telephone, equal_to(account["telephone"]))

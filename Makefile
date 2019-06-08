@@ -28,7 +28,7 @@ test: vendor
 	- cd pkg && go test -cover ./...
 
 .PHONY: behave
-behave:
+behave: build
 	@behave features
 
 .PHONY: stat
