@@ -1,6 +1,6 @@
 Feature: login 登陆测试
 
-    Scenario Outline: Username/Telephone/Email 登陆成功
+    Scenario Outline: 登陆成功
         Given 创建用户 "hatlonely", 电话 "+8612345678901", 邮箱 "hatlonely@foxmail.com", 密码 "e010597fcf126d58fdfa36e636f8fc9e"
         When 用户 "<username>" 使用密码 "<password>" 登陆
         Then 检查状态码应该为 "<status>"
