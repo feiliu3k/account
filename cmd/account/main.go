@@ -87,7 +87,7 @@ func main() {
 		ctx.String(200, "ok")
 	})
 	r.POST("/login", service.Login)
-	r.GET("/register", service.Register)
+	r.POST("/register", service.Register)
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 

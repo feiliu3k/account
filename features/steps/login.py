@@ -6,11 +6,6 @@ import requests
 import json
 
 
-register_type(int=int)
-register_type(str=lambda x: x if x != "N/A" else "")
-register_type(bool=lambda x: True if x == "true" else False)
-
-
 @given('创建用户 "{username:str}", 电话 "{telephone:str}", 邮箱 "{email:str}", 密码 "{password:str}"')
 def step_impl(context, username, telephone, email, password):
     context.cleanup = {
@@ -43,7 +38,7 @@ def step_impl(context, username, password):
     else:
         context.res = res.text
     print({
-        "status": res.status_code,
+        "status": context.status,
         "res": context.res,
     })
 

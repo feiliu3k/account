@@ -7,6 +7,12 @@ import time
 import requests
 import datetime
 import json
+from behave import *
+
+
+register_type(int=int)
+register_type(str=lambda x: x if x != "N/A" else "")
+register_type(bool=lambda x: True if x == "true" else False)
 
 
 config = {
@@ -90,7 +96,7 @@ def after_all(context):
 
 
 def after_scenario(context, scenario):
-    if not context.cleanup:
+    if not hasattr(context, "cleanup"):
         return
 
     if "sql" in context.cleanup:
