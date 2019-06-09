@@ -6,7 +6,7 @@ import requests
 import json
 
 
-@when('注册用户 "{username:str}", 电话 "{telephone:str}", 邮箱 "{email:str}", 密码 "{password:str}"')
+@when('请求 /register, username: "{username:str}", telephone: "{telephone:str}", email: "{email:str}", password: "{password:str}"')
 def step_impl(context, username, telephone, email, password):
     context.username = username
     context.telephone = telephone
