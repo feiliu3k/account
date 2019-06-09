@@ -13,13 +13,12 @@ def step_impl(context, username, password):
         "password": password,
     })
     context.status = res.status_code
+    context.body = res.text
     if context.status == 200:
         context.res = json.loads(res.text)
-    else:
-        context.res = res.text
     print({
         "status": context.status,
-        "res": context.res,
+        "body": context.body,
     })
 
 

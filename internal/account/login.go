@@ -2,6 +2,7 @@ package account
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -40,23 +41,25 @@ func (s *Service) Login(c *gin.Context) {
 
 	buf, err = c.GetRawData()
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("get raw data failed")
+		err = fmt.Errorf("get raw data failed, err: [%v]", err)
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
-		c.String(status, "")
+		c.String(status, err.Error())
 		return
 	}
 
 	if err = json.Unmarshal(buf, req); err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("decode request body failed")
+		err = fmt.Errorf("json unmarshal body failed. body: [%v], err: [%v]", string(buf), err)
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
-		c.String(status, "")
+		c.String(status, err.Error())
 		return
 	}
 
 	if req.Username == "" || req.Password == "" {
 		WarnLog.WithField("@rid", rid).Warn("username or password is empty")
 		status = http.StatusBadRequest
-		c.String(status, "")
+		c.String(status, "username or password is empty")
 		return
 	}
 

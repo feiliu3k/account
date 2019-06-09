@@ -26,7 +26,8 @@ Feature: login 登陆测试
         Given mysqldb.accounts 创建用户 username: "hatlonely", telephone: "+8612345678901", email: "hatlonely@foxmail.com", password: "e010597fcf126d58fdfa36e636f8fc9e"
         When 请求 /login, username: "<username>", password: "<password>"
         Then 检查状态码 res.status_code: <status>
+        Then 检查返回包体 res.body，包含字符串 <body>
         Examples:
-            | username | password                         | status |
-            | N/A      | e010597fcf126d58fdfa36e636f8fc9e | 400    |
-            | N/A      | N/A                              | 400    |
+            | username | password                         | status | body                          |
+            | N/A      | e010597fcf126d58fdfa36e636f8fc9e | 400    | username or password is empty |
+            | N/A      | N/A                              | 400    | username or password is empty |
