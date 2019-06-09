@@ -2,7 +2,7 @@ Feature: login 登陆测试
 
     Scenario Outline: 登陆成功
         Given mysqldb.accounts 创建用户 username: "hatlonely", telephone: "+8612345678901", email: "hatlonely@foxmail.com", password: "e010597fcf126d58fdfa36e636f8fc9e"
-        When 用户 "<username>" 使用密码 "<password>" 登陆
+        When 请求 /login, username: "<username>", password: "<password>"
         Then 检查状态码 res.status_code: <status>
         Then 检查登陆返回包体 res.body, valid: <valid>, tokenlen: <tokenlen>
         Then 检查 rediscache.token
@@ -14,7 +14,7 @@ Feature: login 登陆测试
 
     Scenario Outline: 登陆失败
         Given mysqldb.accounts 创建用户 username: "hatlonely", telephone: "+8612345678901", email: "hatlonely@foxmail.com", password: "e010597fcf126d58fdfa36e636f8fc9e"
-        When 用户 "<username>" 使用密码 "<password>" 登陆
+        When 请求 /login, username: "<username>", password: "<password>"
         Then 检查状态码 res.status_code: <status>
         Then 检查登陆返回包体 res.body, valid: <valid>, tokenlen: <tokenlen>
         Examples:
@@ -24,7 +24,7 @@ Feature: login 登陆测试
 
     Scenario Outline: 异常登陆
         Given mysqldb.accounts 创建用户 username: "hatlonely", telephone: "+8612345678901", email: "hatlonely@foxmail.com", password: "e010597fcf126d58fdfa36e636f8fc9e"
-        When 用户 "<username>" 使用密码 "<password>" 登陆
+        When 请求 /login, username: "<username>", password: "<password>"
         Then 检查状态码 res.status_code: <status>
         Examples:
             | username | password                         | status |

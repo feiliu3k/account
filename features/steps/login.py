@@ -6,7 +6,7 @@ import requests
 import json
 
 
-@when('用户 "{username:str}" 使用密码 "{password:str}" 登陆')
+@when('请求 /login, username: "{username:str}", password: "{password:str}"')
 def step_impl(context, username, password):
     res = requests.post("{}/login".format(context.config["url"]), json={
         "username": username,
