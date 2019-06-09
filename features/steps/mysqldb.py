@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from behave import *
+from hamcrest import *
 
 
 @given('创建用户 "{username:str}", 电话 "{telephone:str}", 邮箱 "{email:str}", 密码 "{password:str}"')
@@ -33,3 +34,18 @@ def step_impl(context, username):
     with context.mysql_conn.cursor() as cursor:
         cursor.execute(context.cleanup["sql"])
     context.mysql_conn.commit()
+
+
+@then('检查 mysqldb.accounts，存在记录 username: "{username:str}", telephone: "{telephone:str}", email: "{email:str}", password: "{password:str}"')
+def step_impl(context, username, telephone, email, password):
+    with context.mysql_conn.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM accounts WHERE username='{}'".format(username)
+        )
+        res = cursor.fetchall()
+        assert_that(len(res), equal_to(1))
+        account = res[0]
+        assert_that(username, equal_to(account["username"]))
+        assert_that(telephone, equal_to(account["telephone"]))
+        assert_that(email, equal_to(account["email"]))
+        assert_that(password, equal_to(account["password"]))

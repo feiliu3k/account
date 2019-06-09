@@ -4,6 +4,7 @@ Feature: register 注册测试
         Given 删除用户 "<username>"
         When 注册用户 "<username>", 电话 "<telephone>", 邮箱 "<email>", 密码 "<password>"
         Then 检查状态码应该为 "<status>"
+        Then 检查 mysqldb.accounts，存在记录 username: "<username>", telephone: "<telephone>", email: "<email>", password: "<password>"
         Examples:
             | username   | telephone      | email                  | password                         | status |
             | hatlonely1 | +8612345678901 | hatlonely1@foxmail.com | e010597fcf126d58fdfa36e636f8fc9e | 200    |
