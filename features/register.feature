@@ -6,7 +6,7 @@ Feature: register 注册测试
         Then 检查状态码 res.status_code: <status>
         Then 检查 mysqldb.accounts，存在记录 username: "<username>", telephone: "<telephone>", email: "<email>", password: "<password>"
         Examples:
-            | username   | telephone      | email                  | password                         | status |
-            | hatlonely1 | +8612345678901 | hatlonely1@foxmail.com | e010597fcf126d58fdfa36e636f8fc9e | 200    |
-            | hatlonely2 | N/A            | hatlonely2@foxmail.com | 0fe808594e47df1a336bafd8ab32f326 | 200    |
-            | hatlonely3 | +8612345678903 | N/A                    | de9baf2c5dde96f0a8b371117e936d4b | 200    |
+            | username   | telephone   | email                  | password                         | status |
+            | hatlonely1 | 12345678901 | hatlonely1@foxmail.com | e010597fcf126d58fdfa36e636f8fc9e | 200    |
+            | hatlonely2 | N/A         | hatlonely2@foxmail.com | 0fe808594e47df1a336bafd8ab32f326 | 200    |
+            | hatlonely3 | 12345678903 | N/A                    | de9baf2c5dde96f0a8b371117e936d4b | 200    |
