@@ -5,7 +5,7 @@ from hamcrest import *
 import json
 
 
-@then('检查redis中token')
+@then('检查 rediscache.token')
 def step_impl(context):
     res = context.redis_client.get(context.res["token"])
     account = json.loads(res)

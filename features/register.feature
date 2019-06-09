@@ -3,7 +3,7 @@ Feature: register 注册测试
     Scenario Outline: 注册成功
         Given 删除用户 "<username>"
         When 注册用户 "<username>", 电话 "<telephone>", 邮箱 "<email>", 密码 "<password>"
-        Then 检查状态码应该为 "<status>"
+        Then 检查状态码 res.status_code: <status>
         Then 检查 mysqldb.accounts，存在记录 username: "<username>", telephone: "<telephone>", email: "<email>", password: "<password>"
         Examples:
             | username   | telephone      | email                  | password                         | status |
