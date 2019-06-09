@@ -23,11 +23,7 @@ def step_impl(context, username, password):
     })
 
 
-@then('检查有效性应该为 "{valid:bool}"')
-def step_impl(context, valid):
+@then('检查登陆返回包体，有效性应该为 "{valid:bool}", token长度应该为 "{tokenlen:int}"')
+def step_impl(context, valid, tokenlen):
     assert_that(context.res["valid"], equal_to(valid))
-
-
-@then('检查token长度应该为 "{tokenlen:int}"')
-def step_impl(context, tokenlen):
     assert_that(len(context.res["token"]), equal_to(tokenlen))
