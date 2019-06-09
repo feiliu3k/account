@@ -26,3 +26,8 @@ def step_impl(context, username, telephone, email, password):
         "status": context.status,
         "body": context.body,
     })
+
+
+@then('检查注册返回包体 res.body, success: {success:bool}')
+def step_impl(context, success):
+    assert_that(context.res["success"], equal_to(success))
