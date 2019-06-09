@@ -57,7 +57,8 @@ func (s *Service) Login(c *gin.Context) {
 	}
 
 	if req.Username == "" || req.Password == "" {
-		WarnLog.WithField("@rid", rid).Warn("username or password is empty")
+		err = fmt.Errorf("username or password is empty")
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
 		c.String(status, "username or password is empty")
 		return
