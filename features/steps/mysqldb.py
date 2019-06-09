@@ -24,7 +24,7 @@ def step_impl(context, username, telephone, email, password):
     context.mysql_conn.commit()
 
 
-@given('mysql.accounts 删除用户 username: "{username:str}"')
+@given('mysqldb.accounts 删除用户 username: "{username:str}"')
 def step_impl(context, username):
     context.cleanup = {
         "sql": "DELETE FROM accounts WHERE username='{}'".format(

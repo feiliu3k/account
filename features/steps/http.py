@@ -9,6 +9,6 @@ def step_impl(context, status):
     assert_that(context.status, equal_to(status))
 
 
-@then('检查返回包体 res.body，包含字符串 {message:str}')
+@then('检查返回包体 res.body，包含字符串 "{message:str}"')
 def step_impl(context, message):
     assert_that(context.body, contains_string(message))
