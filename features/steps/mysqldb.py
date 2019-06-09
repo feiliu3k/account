@@ -4,7 +4,7 @@ from behave import *
 from hamcrest import *
 
 
-@given('创建用户 "{username:str}", 电话 "{telephone:str}", 邮箱 "{email:str}", 密码 "{password:str}"')
+@given('mysqldb.accounts 创建用户 username: "{username:str}", telephone: "{telephone:str}", email: "{email:str}", password: "{password:str}"')
 def step_impl(context, username, telephone, email, password):
     context.cleanup = {
         "sql": "DELETE FROM accounts WHERE username='{}' OR telephone='{}' OR email='{}'".format(
