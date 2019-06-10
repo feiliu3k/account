@@ -7,6 +7,7 @@ import time
 import requests
 import datetime
 import json
+import socket
 from behave import *
 
 
@@ -30,6 +31,19 @@ config = {
         "port": 6379
     }
 }
+
+
+def wait_for_port(port, host='localhost', timeout=5.0):
+    start_time = time.perf_counter()
+    while True:
+        try:
+            with socket.create_connection((host, port), timeout=timeout):
+                break
+        except OSError as ex:
+            time.sleep(0.01)
+            if time.perf_counter() - start_time >= timeout:
+                raise TimeoutError('Waited too long for the port {} on host {} to start accepting '
+                                   'connections.'.format(port, host)) from ex
 
 
 def deploy():
@@ -58,14 +72,7 @@ def start():
         "cd {} && nohup bin/account &".format(config["prefix"]),  shell=True
     )
 
-    now = datetime.datetime.now()
-    while datetime.datetime.now() - now < datetime.timedelta(seconds=5):
-        try:
-            res = requests.get("{}/ping".format(config["url"]))
-            if res.status_code == 200:
-                break
-        except Exception as e:
-            time.sleep(0.1)
+    wait_for_port(config["port"], timeout=5)
 
 
 def stop():
