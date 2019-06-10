@@ -42,8 +42,10 @@ def wait_for_port(port, host='localhost', timeout=5.0):
         except OSError as ex:
             time.sleep(0.01)
             if time.perf_counter() - start_time >= timeout:
-                raise TimeoutError('Waited too long for the port {} on host {} to start accepting '
-                                   'connections.'.format(port, host)) from ex
+                raise TimeoutError(
+                    'Waited too long for the port {} on host {} to start accepting '
+                    'connections.'.format(port, host)
+                ) from ex
 
 
 def deploy():
