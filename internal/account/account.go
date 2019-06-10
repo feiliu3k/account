@@ -6,16 +6,22 @@ import (
 	"github.com/hatlonely/account/internal/rediscache"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
+	"regexp"
 )
 
 var InfoLog *logrus.Logger
 var WarnLog *logrus.Logger
 var AccessLog *logrus.Logger
+var EmailRegex *regexp.Regexp
+var TelephoneRegex *regexp.Regexp
 
 func init() {
 	InfoLog = logrus.New()
 	WarnLog = logrus.New()
 	AccessLog = logrus.New()
+
+	TelephoneRegex = regexp.MustCompile(`^1[358][0-9]{9}$`)
+	EmailRegex = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
 }
 
 type Service struct {
@@ -35,4 +41,12 @@ func NewToken() string {
 	buf := make([]byte, 32)
 	hex.Encode(buf, uid.Bytes())
 	return string(buf)
+}
+
+func ValidateTelephone(telephone string) bool {
+	return TelephoneRegex.MatchString(telephone)
+}
+
+func ValidateEmail(email string) bool {
+	return EmailRegex.MatchString(email)
 }
