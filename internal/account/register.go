@@ -68,7 +68,8 @@ func (s *Service) Register(c *gin.Context) {
 
 	res, err = s.register(req)
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("login failed")
+		err = fmt.Errorf("register failed. err: [%v]", err)
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusInternalServerError
 		c.String(status, err.Error())
 		return
