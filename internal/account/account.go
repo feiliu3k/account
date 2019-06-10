@@ -20,7 +20,7 @@ func init() {
 	WarnLog = logrus.New()
 	AccessLog = logrus.New()
 
-	TelephoneRegex = regexp.MustCompile(`^1[358][0-9]{9}$`)
+	TelephoneRegex = regexp.MustCompile(`^1[345789][0-9]{9}$`)
 	EmailRegex = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
 }
 
