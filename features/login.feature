@@ -28,6 +28,6 @@ Feature: login 登陆测试
         Then 检查状态码 res.status_code: <status>
         Then 检查返回包体 res.body，包含字符串 "<body>"
         Examples:
-            | username | password                         | status | body                          |
-            | N/A      | e010597fcf126d58fdfa36e636f8fc9e | 400    | username or password is empty |
-            | N/A      | N/A                              | 400    | username or password is empty |
+            | username | password                         | status | body                         |
+            | N/A      | e010597fcf126d58fdfa36e636f8fc9e | 400    | username or password is null |
+            | N/A      | N/A                              | 400    | username or password is null |

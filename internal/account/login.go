@@ -56,11 +56,11 @@ func (s *Service) Login(c *gin.Context) {
 		return
 	}
 
-	if req.Username == "" || req.Password == "" {
-		err = fmt.Errorf("username or password is empty")
+	if err = s.checkLoginReqBody(req); err != nil {
+		err = fmt.Errorf("check request body failed. body: [%v], err: [%v]", string(buf), err)
 		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
-		c.String(status, "username or password is empty")
+		c.String(status, err.Error())
 		return
 	}
 
@@ -74,6 +74,13 @@ func (s *Service) Login(c *gin.Context) {
 
 	status = http.StatusOK
 	c.JSON(status, res)
+}
+
+func (s *Service) checkLoginReqBody(req *LoginReqBody) error {
+	if req.Username == "" || req.Password == "" {
+		return fmt.Errorf("username or password is null")
+	}
+	return nil
 }
 
 func (s *Service) login(req *LoginReqBody) (*LoginResBody, error) {

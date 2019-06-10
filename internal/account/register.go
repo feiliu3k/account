@@ -2,6 +2,7 @@ package account
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hatlonely/account/internal/mysqldb"
 	"github.com/sirupsen/logrus"
@@ -42,16 +43,26 @@ func (s *Service) Register(c *gin.Context) {
 
 	buf, err = c.GetRawData()
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("get raw data failed")
+		err = fmt.Errorf("get raw data failed, err: [%v]", err)
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
-		c.String(status, "")
+		c.String(status, err.Error())
 		return
 	}
 
 	if err = json.Unmarshal(buf, req); err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("decode request body failed")
+		err = fmt.Errorf("json unmarshal body failed. body: [%v], err: [%v]", string(buf), err)
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
-		c.String(status, "")
+		c.String(status, err.Error())
+		return
+	}
+
+	if err = s.checkRegisterReqBody(req); err != nil {
+		err = fmt.Errorf("check request body failed. body: [%v], err: [%v]", string(buf), err)
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
+		status = http.StatusBadRequest
+		c.String(status, err.Error())
 		return
 	}
 
@@ -65,6 +76,16 @@ func (s *Service) Register(c *gin.Context) {
 
 	status = http.StatusOK
 	c.JSON(status, res)
+}
+
+func (s *Service) checkRegisterReqBody(req *RegisterReqBody) error {
+	if req.Username == "" {
+		return fmt.Errorf("username is null")
+	}
+	if req.Telephone == "" && req.Email == "" {
+		return fmt.Errorf("email and telephone are both null")
+	}
+	return nil
 }
 
 func (s *Service) register(req *RegisterReqBody) (*RegisterResBody, error) {
