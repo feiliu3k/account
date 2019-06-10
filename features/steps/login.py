@@ -14,11 +14,13 @@ def step_impl(context, username, password):
     })
     context.status = res.status_code
     context.body = res.text
+    context.cookies = res.cookies
     if context.status == 200:
         context.res = json.loads(res.text)
     print({
         "status": context.status,
         "body": context.body,
+        "cookies": context.cookies,
     })
 
 
@@ -26,3 +28,8 @@ def step_impl(context, username, password):
 def step_impl(context, valid, tokenlen):
     assert_that(context.res["valid"], equal_to(valid))
     assert_that(len(context.res["token"]), equal_to(tokenlen))
+
+
+@then('检查登陆返回 cookie')
+def step_impl(context):
+    assert_that(context.res["token"], equal_to(context.cookies["token"]))

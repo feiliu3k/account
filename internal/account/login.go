@@ -72,6 +72,10 @@ func (s *Service) Login(c *gin.Context) {
 		return
 	}
 
+	if res.Valid {
+		c.SetCookie("token", res.Token, 7*24*3600, "/", c.Request.Host, false, true)
+	}
+
 	status = http.StatusOK
 	c.JSON(status, res)
 }
