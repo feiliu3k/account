@@ -83,6 +83,9 @@ func (s *Service) checkRegisterReqBody(req *RegisterReqBody) error {
 	if req.Username == "" {
 		return fmt.Errorf("username is null")
 	}
+	if len(req.Username) >= 64 {
+		return fmt.Errorf("username length [%v] should less than 64", len(req.Username))
+	}
 	if req.Telephone == "" && req.Email == "" {
 		return fmt.Errorf("email and telephone are both null")
 	}

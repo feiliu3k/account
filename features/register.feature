@@ -13,7 +13,7 @@ Feature: register 注册测试
             | hatlonely3 | 13145678903 | N/A                    | de9baf2c5dde96f0a8b371117e936d4b | 200    | true    |
 
     Scenario: 重复注册
-        Given mysqldb.accounts 删除用户 username: "<username>"
+        Given mysqldb.accounts 删除用户 username: "hatlonely1"
         Given mysqldb.accounts 创建用户 username: "hatlonely1", telephone: "13145678901", email: "hatlonely1@foxmail.com", password: "e010597fcf126d58fdfa36e636f8fc9e"
         When 请求 /register, username: "hatlonely1", telephone: "13145678901", email: "hatlonely1@foxmail.com", password: "e010597fcf126d58fdfa36e636f8fc9e"
         Then 检查状态码 res.status_code: 500
