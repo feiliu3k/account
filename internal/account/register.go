@@ -7,6 +7,7 @@ import (
 	"github.com/hatlonely/account/internal/mysqldb"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"regexp"
 )
 
 type RegisterReqBody struct {
@@ -79,15 +80,37 @@ func (s *Service) Register(c *gin.Context) {
 	c.JSON(status, res)
 }
 
+var emailRegex *regexp.Regexp
+var telephoneRegex *regexp.Regexp
+
+func init() {
+	telephoneRegex = regexp.MustCompile(`^[0-9]+$`)
+	emailRegex = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+}
+
+func validateTelephone(telephone string) bool {
+	return telephoneRegex.MatchString(telephone)
+}
+
+func validateEmail(email string) bool {
+	return emailRegex.MatchString(email)
+}
+
 func (s *Service) checkRegisterReqBody(req *RegisterReqBody) error {
 	if req.Username == "" {
-		return fmt.Errorf("username is null")
+		return fmt.Errorf("username should not be empty")
 	}
 	if len(req.Username) >= 64 {
 		return fmt.Errorf("username length [%v] should less than 64", len(req.Username))
 	}
 	if req.Telephone == "" && req.Email == "" {
-		return fmt.Errorf("email and telephone are both null")
+		return fmt.Errorf("email and telephone should not be empty together")
+	}
+	if req.Telephone != "" && !validateTelephone(req.Telephone) {
+		return fmt.Errorf("invalid telephone [%v]", req.Telephone)
+	}
+	if req.Email != "" && !validateEmail(req.Email) {
+		return fmt.Errorf("invalid email [%v]", req.Email)
 	}
 	return nil
 }
