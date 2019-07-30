@@ -3,7 +3,7 @@
         "port": ":6060"
     },
     "mysqldb": {
-        "uri": "hatlonely:keaiduo1@127.0.0.1/hads?charset=utf8&parseTime=True&loc=Local"
+        "uri": "hatlonely:keaiduo1@/hads?charset=utf8&parseTime=True&loc=Local"
     },
     "rediscache": {
         "address": "127.0.0.1:6379",

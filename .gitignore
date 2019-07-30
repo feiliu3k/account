@@ -1,6 +1,6 @@
 vendor/
 .idea/
-build/
+output/
 test.log
 test.log.*
 log/

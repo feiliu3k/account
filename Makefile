@@ -2,14 +2,14 @@ export GOPATH=$(shell pwd)/../../../../
 export PATH:=${PATH}:${GOPATH}/bin:$(shell pwd)/third/go/bin:$(shell pwd)/third/protobuf/bin:$(shell pwd)/third/cloc-1.76:$(shell pwd)/third/redis-3.2.8/src
 
 .PHONY: all
-all: third vendor build test stat
+all: third vendor output test stat
 
-build: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor
+output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor
 	@echo "compile"
 	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/account/main.go && \
-	mkdir -p build/account/bin && mv main build/account/bin/account && \
-	mkdir -p build/account/configs && cp configs/account/* build/account/configs && \
-	mkdir -p build/account/log
+	mkdir -p output/account/bin && mv main output/account/bin/account && \
+	mkdir -p output/account/configs && cp configs/account/* output/account/configs && \
+	mkdir -p output/account/log
 
 vendor: go.mod go.sum
 	@echo "install golang dependency"
@@ -28,7 +28,7 @@ test: vendor
 	- cd pkg && go test -cover ./...
 
 .PHONY: behave
-behave: build
+behave: output
 	@behave features
 
 .PHONY: stat
@@ -41,11 +41,11 @@ stat: cloc gocyclo
 
 .PHONY: clean
 clean:
-	rm -rf build
+	rm -rf output
 
 .PHONY: deep_clean
 deep_clean:
-	rm -rf build vendor third
+	rm -rf output vendor third
 
 third: protoc golang cloc gocyclo easyjson
 
