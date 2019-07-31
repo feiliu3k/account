@@ -1,8 +1,18 @@
+version=1.0.0
+repository=account
+user=hatlonely
+
 export GOPATH=$(shell pwd)/../../../../
 export PATH:=${PATH}:${GOPATH}/bin:$(shell pwd)/third/go/bin:$(shell pwd)/third/protobuf/bin:$(shell pwd)/third/cloc-1.76:$(shell pwd)/third/redis-3.2.8/src
 
 .PHONY: all
 all: third vendor output test stat
+
+deploy:
+	docker stack deploy -c stack.yml ${repository}
+
+remove:
+	docker stack rm ${repository}
 
 .PHONY: buildenv
 buildenv:
