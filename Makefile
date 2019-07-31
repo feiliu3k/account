@@ -1,9 +1,16 @@
-version=1.0.0
 repository=account
 user=hatlonely
+version=$(shell git describe --tags)
 
 export GOPATH=$(shell pwd)/../../../../
 export PATH:=${PATH}:${GOPATH}/bin:$(shell pwd)/third/go/bin:$(shell pwd)/third/protobuf/bin:$(shell pwd)/third/cloc-1.76:$(shell pwd)/third/redis-3.2.8/src
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	sedi=sed -i ""
+else
+	sedi=sed -i
+endif
 
 .PHONY: all
 all: third vendor output test stat
@@ -26,6 +33,7 @@ image:
 	mkdir -p docker/
 	docker cp go-build-env:/data/src/account/output/account docker/
 	docker build --tag=hatlonely/account:`git describe --tags` .
+	${sedi} 's/image: ${user}\/${repository}:.*$$/image: ${user}\/${repository}:${version}/g' stack.yml
 
 output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor
 	@echo "compile"

@@ -1,7 +1,7 @@
 version: "3.5"
 services:
   account:
-    image: hatlonely/account:v1.0.0-2-gc9a7696
+    image: hatlonely/account:v1.0.0-3-g838579d
     hostname: account
     deploy:
       replicas: 1
