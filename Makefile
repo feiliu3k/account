@@ -4,6 +4,18 @@ export PATH:=${PATH}:${GOPATH}/bin:$(shell pwd)/third/go/bin:$(shell pwd)/third/
 .PHONY: all
 all: third vendor output test stat
 
+.PHONY: buildenv
+buildenv:
+	docker run --rm --name go-build-env -d golang:1.12.5 tail -f /dev/null
+
+.PHONY: image
+image:
+	docker exec -it go-build-env mkdir -p /data/src/account
+	docker cp . go-build-env:/data/src/account
+	docker exec -it go-build-env bash -c "cd /data/src/account && make output"
+	mkdir -p docker
+	docker cp go-build-env:/data/src/account/output/account docker/account
+
 output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor
 	@echo "compile"
 	@go build -ldflags "-X 'main.AppVersion=`sh scripts/version.sh`'" cmd/account/main.go && \
