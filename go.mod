@@ -27,16 +27,25 @@ require (
 	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-redis/redis v6.15.2+incompatible
+	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jinzhu/gorm v1.9.8
+	github.com/jtolds/gls v4.20.0+incompatible
 	github.com/lestrrat-go/envload v0.0.0-20180220234015-a3eb8ddeffcc // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
-	github.com/lestrrat-go/strftime v0.0.0-20180821113735-8b31f9c59b0f // indirect
+	github.com/lestrrat-go/strftime v0.0.0-20180821113735-8b31f9c59b0f
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
+	github.com/modern-go/reflect2 v1.0.1
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
+	github.com/pkg/errors v0.8.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
+	github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a
 	github.com/spf13/viper v1.4.0
 	github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 // indirect
+	golang.org/x/sys v0.0.0-20190606165138-5da285871e9c
+	golang.org/x/text v0.3.2
+	google.golang.org/appengine v1.5.0
 )

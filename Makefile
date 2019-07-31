@@ -13,8 +13,8 @@ image:
 	docker exec -it go-build-env mkdir -p /data/src/account
 	docker cp . go-build-env:/data/src/account
 	docker exec -it go-build-env bash -c "cd /data/src/account && make output"
-	mkdir -p docker
-	docker cp go-build-env:/data/src/account/output/account docker/account
+	mkdir -p docker/
+	docker cp go-build-env:/data/src/account/output/account docker/
 	docker build --tag=hatlonely/account:`git describe --tags` .
 
 output: cmd/*/*.go internal/*/*.go scripts/version.sh Makefile vendor
