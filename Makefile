@@ -16,7 +16,7 @@ endif
 all: third vendor output test stat
 
 deploy:
-	mkdir -p ${HOME}/var/docker/${repository}/log
+	mkdir -p /var/docker/${repository}/log
 	docker stack deploy -c stack.yml ${repository}
 
 remove:
